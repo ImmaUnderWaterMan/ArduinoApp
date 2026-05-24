@@ -1,0 +1,185 @@
+﻿<Window x:Class="ArduinoApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Arduino Learning Hub" Height="600" Width="900"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="10">
+        <TabControl FontSize="14">
+
+            <!-- Вкладка 1: Учебные темы (без изменений) -->
+            <TabItem Header="📚 Учебные темы">
+                <!-- ... содержимое первой вкладки ... -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="1" Margin="0,0,5,0" Background="#f0f0f0">
+                        <ListBox x:Name="TopicsList" DisplayMemberPath="Title" SelectionChanged="TopicsList_SelectionChanged" Padding="5"/>
+                    </Border>
+                    <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="10">
+                            <TextBlock x:Name="TopicTitle" Text="Выберите тему..." FontSize="20" FontWeight="Bold" Foreground="#2c3e50" Margin="0,0,0,10"/>
+                            <TextBlock x:Name="TopicContent" TextWrapping="Wrap" FontSize="14" LineHeight="20"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+
+            <!-- Вкладка 2: Справочник компонентов -->
+            <TabItem Header="⚡ Справочник компонентов">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Левая колонка: Список компонентов -->
+                    <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="1" Margin="0,0,5,0" Background="#f0f0f0">
+                        <ListBox x:Name="ComponentsList" 
+                                 DisplayMemberPath="Name" 
+                                 SelectionChanged="ComponentsList_SelectionChanged"
+                                 Padding="5"/>
+                    </Border>
+
+                    <!-- Правая колонка: Детали компонента -->
+                    <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Background="#fdfdfd">
+
+                        <!-- Основной контейнер для правой части -->
+                        <StackPanel Margin="20" MaxWidth="800" HorizontalAlignment="Left">
+
+                            <!-- Поле поиска (остается сверху) -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <TextBox x:Name="SearchBox" 
+                                         Width="250" 
+                                         Padding="8" 
+                                         VerticalContentAlignment="Center"
+                                         KeyDown="SearchBox_KeyDown"/>
+                                <Button Content="Найти" 
+                                        Width="80" 
+                                        Margin="10,0,0,0" 
+                                        Click="SearchButton_Click"/>
+                            </StackPanel>
+
+                            <!-- ========================================== -->
+                            <!-- ВСТАВИТЬ КАРТОЧКУ СЮДА                     -->
+                            <!-- ========================================== -->
+
+                            <!-- Контейнер самой карточки (изначально скрыт Visibility="Collapsed") -->
+                            <Border x:Name="ComponentCardContainer" 
+                                    BorderBrush="#e0e0e0" 
+                                    BorderThickness="1" 
+                                    CornerRadius="8" 
+                                    Background="White" 
+                                    Padding="0" 
+                                    Visibility="Collapsed">
+
+                                <StackPanel>
+
+
+                                    <Border Height="200" Background="#f5f5f5" CornerRadius="8,8,0,0" ClipToBounds="True">
+                                        <Image x:Name="ComponentImage" 
+                                               Stretch="UniformToFill" 
+                                               HorizontalAlignment="Center" 
+                                               VerticalAlignment="Center"
+                                               Source="/Images/placeholder.jpg"/>
+                                    </Border>
+
+                                    <!-- 2. Основная информация -->
+                                    <StackPanel Margin="20">
+                                        <TextBlock x:Name="CardTitle" 
+                                                   Text="Component Name" 
+                                                   FontSize="24" 
+                                                   FontWeight="Bold" 
+                                                   Foreground="#333" 
+                                                   Margin="0,0,0,10"/>
+
+                                        <TextBlock x:Name="CardDescription" 
+                                                   Text="Description goes here..." 
+                                                   TextWrapping="Wrap" 
+                                                   FontSize="14" 
+                                                   Foreground="#666" 
+                                                   LineHeight="20" 
+                                                   Margin="0,0,0,20"/>
+
+                                        <!-- Характеристики (Сетка) -->
+                                        <Grid Margin="0,0,0,20">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0" Text="Контактов:" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                                            <TextBlock Grid.Column="1" x:Name="CardPins" Text="0" Margin="0,0,20,0"/>
+
+                                            <TextBlock Grid.Column="2" Text="Напряжение:" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                                            <TextBlock Grid.Column="3" x:Name="CardVoltage" Text="0V - 0V"/>
+                                        </Grid>
+
+                                        <Separator Margin="0,0,0,20"/>
+
+                                        <!-- Схема подключения -->
+                                        <TextBlock Text="📐 Схема подключения:" FontWeight="Bold" FontSize="16" Margin="0,0,0,5"/>
+                                        <Border Background="#f5f5f5" Padding="10" CornerRadius="4" Margin="0,0,0,20">
+                                            <TextBlock x:Name="CardSchema" 
+                                                       Text="Нет данных" 
+                                                       TextWrapping="Wrap" 
+                                                       FontFamily="Consolas" 
+                                                       FontSize="13"/>
+                                        </Border>
+
+                                        <!-- Пример кода -->
+                                        <TextBlock Text="💻 Пример кода:" FontWeight="Bold" FontSize="16" Margin="0,0,0,5"/>
+                                        <Border Background="#2d2d2d" Padding="15" CornerRadius="4" Margin="0,0,0,20">
+                                            <TextBlock x:Name="CardCode" 
+                                                       Text="// Code snippet" 
+                                                       TextWrapping="Wrap" 
+                                                       FontFamily="Consolas" 
+                                                       FontSize="13" 
+                                                       Foreground="#d4d4d4"/>
+                                        </Border>
+
+                                        <!-- Кнопка действия -->
+                                        <Button x:Name="BtnCopyCode" 
+                                                Content="📋 Копировать код" 
+                                                Width="150" 
+                                                Height="35" 
+                                                Background="#2196F3" 
+                                                Foreground="White" 
+                                                BorderThickness="0" 
+                                                Cursor="Hand"
+                                                Click="BtnCopyCode_Click"
+                                                HorizontalAlignment="Left"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock x:Name="EmptyStateMessage" 
+                                       Text="Выберите компонент из списка слева или используйте поиск." 
+                                       FontSize="16" 
+                                       Foreground="#999" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Top" 
+                                       Margin="0,50,0,0"/>
+
+                            <TextBlock x:Name="ErrorMessage" 
+                                       Text="" 
+                                       FontSize="16" 
+                                       Foreground="Red" 
+                                       TextWrapping="Wrap" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Top" 
+                                       Margin="0,50,0,0" 
+                                       Visibility="Collapsed"/>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Window>
